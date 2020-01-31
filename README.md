@@ -58,6 +58,7 @@ For production use, it is recommended to change the password after provisioning 
 |------|-------------|
 | eip\_fortigate | Elastic IP address of firewall |
 | instance\_fortigate | Fortigate Instance ID |
+| instance\_fortigate\_primary\_network\_interface\_id | Primary ENI ID \(attach route tables to this\) |
 | keypair\_key\_name | Instance keypair name |
 | s3\_bucket\_config | S3 bucket holding configuration |
 | secretsmanager\_secret\_arn | FortiGate admin password secret |

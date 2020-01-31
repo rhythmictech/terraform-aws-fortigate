@@ -8,6 +8,11 @@ output "instance_fortigate" {
   value       = aws_instance.this.id
 }
 
+output "instance_fortigate_primary_network_interface_id" {
+  description = "Primary ENI ID (attach route tables to this)"
+  value       = aws_instance.this.primary_network_interface_id
+}
+
 output "keypair_key_name" {
   description = "Instance keypair name"
   value       = module.keypair.key_name
