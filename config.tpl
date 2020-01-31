@@ -7,6 +7,7 @@ config system interface
         set vdom "root"
         set mode dhcp
         set allowaccess ping https ssh fgfm
+        set defaultgw disable
     next
     edit "port2"
         set vdom "root"
