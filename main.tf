@@ -65,6 +65,7 @@ resource "aws_instance" "this" {
   iam_instance_profile = aws_iam_instance_profile.this.name
   instance_type        = var.instance_type
   key_name             = module.keypair.key_name
+  source_dest_check    = false
   subnet_id            = var.internal_subnet_id
   tags = merge(
     var.tags, {
