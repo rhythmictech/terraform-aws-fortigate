@@ -60,7 +60,7 @@ module "keypair" {
 }
 
 resource "aws_instance" "this" {
-  ami                  = local.latest_ami
+  ami                  = local.ami
   ebs_optimized        = true
   iam_instance_profile = aws_iam_instance_profile.this.name
   instance_type        = var.instance_type
