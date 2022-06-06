@@ -82,6 +82,7 @@ For production use, it is recommended to change the password after provisioning 
 | [aws_ami.ondemand](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/ami) | data source |
 | [aws_iam_policy_document.assume](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_iam_policy_document.bucket_access](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [aws_secretsmanager_secret.password](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/secretsmanager_secret) | data source |
 | [aws_secretsmanager_secret_version.password](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/secretsmanager_secret_version) | data source |
@@ -93,6 +94,9 @@ For production use, it is recommended to change the password after provisioning 
 |------|-------------|------|---------|:--------:|
 | <a name="input_allowed_admin_cidrs"></a> [allowed\_admin\_cidrs](#input\_allowed\_admin\_cidrs) | Public CIDRs that will be able to access the FortiGate admin ports | `list(string)` | <pre>[<br>  "0.0.0.0/0"<br>]</pre> | no |
 | <a name="input_allowed_admin_security_group_id"></a> [allowed\_admin\_security\_group\_id](#input\_allowed\_admin\_security\_group\_id) | Security group allowed to access admininstrative ports | `string` | `null` | no |
+| <a name="input_ami_account_id"></a> [ami\_account\_id](#input\_ami\_account\_id) | AWS account holding Fortinet AMI (GovCloud uses `874634375141`) | `string` | `"679593333241"` | no |
+| <a name="input_ami_byol_filter"></a> [ami\_byol\_filter](#input\_ami\_byol\_filter) | AMI name string for on demand FG AMI | `string` | `"FortiGate-VM64-AWS build*"` | no |
+| <a name="input_ami_ondemand_filter"></a> [ami\_ondemand\_filter](#input\_ami\_ondemand\_filter) | AMI name string for on demand FG AMI | `string` | `"FortiGate-VM64-AWSONDEMAND*"` | no |
 | <a name="input_config_bucket_config_file"></a> [config\_bucket\_config\_file](#input\_config\_bucket\_config\_file) | Name of the configuration file in the S3 bucket | `string` | `"fortigate.conf"` | no |
 | <a name="input_config_bucket_license_file"></a> [config\_bucket\_license\_file](#input\_config\_bucket\_license\_file) | Name of the license file (leave blank if using on demand) | `string` | `""` | no |
 | <a name="input_config_bucket_name"></a> [config\_bucket\_name](#input\_config\_bucket\_name) | Name of config bucket. If `create_config_bucket = true`, a bucket with this name will be created. | `string` | `""` | no |

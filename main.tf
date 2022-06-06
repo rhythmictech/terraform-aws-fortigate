@@ -19,6 +19,7 @@ data "aws_ami" "ondemand" {
 }
 
 data "aws_region" "current" {}
+data "aws_partition" "current" {}
 
 data "template_file" "userdata" {
   template = file("${path.module}/userdata.tpl")
