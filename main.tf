@@ -1,20 +1,20 @@
 data "aws_ami" "byol" {
   most_recent = true
-  owners      = ["679593333241"]
+  owners      = [var.ami_account_id]
 
   filter {
     name   = "name"
-    values = ["FortiGate-VM64-AWS build*"]
+    values = [var.ami_byol_filter]
   }
 }
 
 data "aws_ami" "ondemand" {
   most_recent = true
-  owners      = ["679593333241"]
+  owners      = [var.ami_account_id]
 
   filter {
     name   = "name"
-    values = ["FortiGate-VM64-AWSONDEMAND*"]
+    values = [var.ami_ondemand_filter]
   }
 }
 

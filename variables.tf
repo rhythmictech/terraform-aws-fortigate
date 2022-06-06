@@ -10,6 +10,24 @@ variable "allowed_admin_security_group_id" {
   type        = string
 }
 
+variable "ami_account_id" {
+  default     = "679593333241"
+  description = "AWS account holding Fortinet AMI (GovCloud uses `874634375141`)"
+  type        = string
+}
+
+variable "ami_byol_filter" {
+  default     = "FortiGate-VM64-AWS build*"
+  description = "AMI name string for on demand FG AMI"
+  type        = string
+}
+
+variable "ami_ondemand_filter" {
+  default     = "FortiGate-VM64-AWSONDEMAND*"
+  description = "AMI name string for on demand FG AMI"
+  type        = string
+}
+
 variable "create_keypair" {
   default     = true
   description = "Whether to create a keypair for this instance, which will be stored in Secrets Manager"
