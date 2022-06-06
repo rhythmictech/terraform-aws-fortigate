@@ -71,7 +71,7 @@ resource "aws_security_group_rule" "allow_admin_ssh" {
 }
 
 resource "aws_security_group_rule" "allow_admin_https_sgs" {
-  count = var.allowed_admin_security_group_id != "" ? 1 : 0
+  count = var.allowed_admin_security_group_id != null ? 1 : 0
 
   description              = "Allow administrative access (HTTPS)"
   from_port                = var.https_admin_port
@@ -83,7 +83,7 @@ resource "aws_security_group_rule" "allow_admin_https_sgs" {
 }
 
 resource "aws_security_group_rule" "allow_admin_ssh_sgs" {
-  count = var.allowed_admin_security_group_id != "" ? 1 : 0
+  count = var.allowed_admin_security_group_id != null ? 1 : 0
 
   description              = "Allow administrative access (SSH)"
   from_port                = 22
