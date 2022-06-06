@@ -5,9 +5,15 @@ variable "allowed_admin_cidrs" {
 }
 
 variable "allowed_admin_security_group_id" {
-  default     = ""
+  default     = null
   description = "Security group allowed to access admininstrative ports"
   type        = string
+}
+
+variable "create_keypair" {
+  default     = true
+  description = "Whether to create a keypair for this instance, which will be stored in Secrets Manager"
+  type        = bool
 }
 
 variable "enable_sdn_access" {
@@ -28,12 +34,19 @@ variable "https_admin_port" {
 }
 
 variable "instance_type" {
-  type    = string
-  default = "m5.large"
+  default     = "m5.large"
+  description = "Instance type for FG"
+  type        = string
 }
 
 variable "internal_subnet_id" {
   description = "Subnet ID to use for internal interface"
+  type        = string
+}
+
+variable "keypair" {
+  default     = null
+  description = "Keypair to use for EC2 instance (set to blank to omit a keypair, not used if `create_keypair==true`)"
   type        = string
 }
 
