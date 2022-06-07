@@ -1,4 +1,4 @@
-
+#tfsec:ignore:AWS002
 resource "aws_s3_bucket" "config" {
   count  = var.create_config_bucket ? 1 : 0
   bucket = var.config_bucket_name
@@ -15,7 +15,6 @@ resource "aws_s3_bucket" "config" {
   versioning {
     enabled = true
   }
-
 }
 
 resource "aws_s3_bucket_public_access_block" "config" {
@@ -34,7 +33,7 @@ resource "aws_s3_bucket_public_access_block" "config" {
 # directly from the module
 data "aws_secretsmanager_secret" "password" {
   count = var.load_default_config ? 1 : 0
-  arn   = module.fortigate_password.secret_arn
+  arn   = module.fortigate_password[0].secret_arn
 }
 
 data "aws_secretsmanager_secret_version" "password" {

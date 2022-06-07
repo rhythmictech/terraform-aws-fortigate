@@ -1,50 +1,45 @@
-data "aws_caller_identity" "current" {
-}
-
-locals {
-  account_id = data.aws_caller_identity.current.account_id
-}
-
 data "aws_ami" "byol" {
   most_recent = true
-  owners      = ["679593333241"]
+  owners      = [var.ami_account_id]
 
   filter {
     name   = "name"
-    values = ["FortiGate-VM64-AWS build*"]
+    values = [var.ami_byol_filter]
   }
 }
 
 data "aws_ami" "ondemand" {
   most_recent = true
-  owners      = ["679593333241"]
+  owners      = [var.ami_account_id]
 
   filter {
     name   = "name"
-    values = ["FortiGate-VM64-AWSONDEMAND*"]
+    values = [var.ami_ondemand_filter]
   }
 }
 
 data "aws_region" "current" {}
-
-data "template_file" "userdata" {
-  template = file("${path.module}/userdata.tpl")
-  vars = {
-    bucket      = var.config_bucket_name
-    region      = var.config_bucket_region == "" ? data.aws_region.current.name : var.config_bucket_region
-    license     = var.use_byol ? var.config_bucket_license_file : ""
-    config_file = var.config_bucket_config_file
-  }
-}
+data "aws_partition" "current" {}
 
 locals {
   latest_ami = var.use_byol ? data.aws_ami.byol.id : data.aws_ami.ondemand.id
   ami        = coalesce(var.override_ami, local.latest_ami)
+
+  userdata = templatefile("${path.module}/userdata.tpl",
+    {
+      bucket      = var.config_bucket_name
+      region      = var.config_bucket_region == "" ? data.aws_region.current.name : var.config_bucket_region
+      license     = var.use_byol ? var.config_bucket_license_file : ""
+      config_file = var.config_bucket_config_file
+  })
 }
 
 module "fortigate_password" {
-  source           = "git::https://github.com/rhythmictech/terraform-aws-secretsmanager-random-secret?ref=v1.1.1"
-  create_secret    = var.load_default_config
+  count = var.load_default_config ? 1 : 0
+
+  source  = "rhythmictech/secretsmanager-random-secret/aws"
+  version = "~> 1.4"
+
   name_prefix      = var.name
   description      = "${var.name} admin password"
   length           = 20
@@ -53,33 +48,39 @@ module "fortigate_password" {
 }
 
 module "keypair" {
-  source      = "git::https://github.com/rhythmictech/terraform-aws-secretsmanager-keypair?ref=v0.0.3"
+  count = var.create_keypair ? 1 : 0
+
+  source  = "rhythmictech/secretsmanager-keypair/aws"
+  version = "~> 0.0.4"
+
   name_prefix = var.name
   description = "${var.name} SSH keypair"
   tags        = var.tags
 }
 
 resource "aws_instance" "this" {
-  ami                  = local.ami
-  ebs_optimized        = true
-  iam_instance_profile = aws_iam_instance_profile.this.name
-  instance_type        = var.instance_type
-  key_name             = module.keypair.key_name
-  source_dest_check    = false
-  subnet_id            = var.internal_subnet_id
+  ami                    = local.ami
+  ebs_optimized          = true
+  iam_instance_profile   = aws_iam_instance_profile.this.name
+  instance_type          = var.instance_type
+  key_name               = try(module.keypair[0].key_name, var.keypair)
+  source_dest_check      = false
+  subnet_id              = var.internal_subnet_id
+  user_data              = var.enable_auto_config ? local.userdata : ""
+  vpc_security_group_ids = [aws_security_group.internal.id]
+
   tags = merge(
     var.tags, {
       "Name" = var.name
   })
-  user_data              = var.enable_auto_config ? data.template_file.userdata.rendered : ""
-  vpc_security_group_ids = [aws_security_group.internal.id]
 
-  depends_on = [aws_s3_bucket_object.default_config]
 
   lifecycle {
     prevent_destroy = true
     ignore_changes  = [ami, user_data]
   }
+
+  depends_on = [aws_s3_bucket_object.default_config]
 }
 
 resource "aws_network_interface" "outbound" {
