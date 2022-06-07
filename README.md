@@ -35,14 +35,12 @@ For production use, it is recommended to change the password after provisioning 
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 0.13.4 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 3.8 |
-| <a name="requirement_template"></a> [template](#requirement\_template) | >= 1.0 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | 4.17.1 |
-| <a name="provider_template"></a> [template](#provider\_template) | 2.2.0 |
 
 ## Modules
 
@@ -86,7 +84,6 @@ For production use, it is recommended to change the password after provisioning 
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 | [aws_secretsmanager_secret.password](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/secretsmanager_secret) | data source |
 | [aws_secretsmanager_secret_version.password](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/secretsmanager_secret_version) | data source |
-| [template_file.userdata](https://registry.terraform.io/providers/hashicorp/template/latest/docs/data-sources/file) | data source |
 
 ## Inputs
 

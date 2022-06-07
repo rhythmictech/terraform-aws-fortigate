@@ -21,19 +21,17 @@ data "aws_ami" "ondemand" {
 data "aws_region" "current" {}
 data "aws_partition" "current" {}
 
-data "template_file" "userdata" {
-  template = file("${path.module}/userdata.tpl")
-  vars = {
-    bucket      = var.config_bucket_name
-    region      = var.config_bucket_region == "" ? data.aws_region.current.name : var.config_bucket_region
-    license     = var.use_byol ? var.config_bucket_license_file : ""
-    config_file = var.config_bucket_config_file
-  }
-}
-
 locals {
   latest_ami = var.use_byol ? data.aws_ami.byol.id : data.aws_ami.ondemand.id
   ami        = coalesce(var.override_ami, local.latest_ami)
+
+  userdata = templatefile("${path.module}/userdata.tpl",
+    {
+      bucket      = var.config_bucket_name
+      region      = var.config_bucket_region == "" ? data.aws_region.current.name : var.config_bucket_region
+      license     = var.use_byol ? var.config_bucket_license_file : ""
+      config_file = var.config_bucket_config_file
+  })
 }
 
 module "fortigate_password" {
@@ -68,7 +66,7 @@ resource "aws_instance" "this" {
   key_name               = try(module.keypair[0].key_name, var.keypair)
   source_dest_check      = false
   subnet_id              = var.internal_subnet_id
-  user_data              = var.enable_auto_config ? data.template_file.userdata.rendered : ""
+  user_data              = var.enable_auto_config ? local.userdata : ""
   vpc_security_group_ids = [aws_security_group.internal.id]
 
   tags = merge(
