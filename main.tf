@@ -41,6 +41,7 @@ locals {
 }
 
 module "fortigate_password" {
+  count            = var.load_default_config ? 1 : 0
   source           = "git::https://github.com/rhythmictech/terraform-aws-secretsmanager-random-secret?ref=v1.1.1"
   create_secret    = var.load_default_config
   name_prefix      = var.name
@@ -74,7 +75,7 @@ resource "aws_instance" "this" {
   user_data              = var.enable_auto_config ? local.userdata : ""
   vpc_security_group_ids = [aws_security_group.internal.id]
 
-  depends_on = [aws_s3_bucket_object.default_config]
+  depends_on = [aws_s3_object.default_config]
 
   lifecycle {
     prevent_destroy = true
@@ -95,8 +96,8 @@ resource "aws_network_interface" "outbound" {
 }
 
 resource "aws_eip" "this" {
-  vpc  = true
-  tags = var.tags
+  domain = "vpc"
+  tags   = var.tags
 }
 
 resource "aws_eip_association" "this" {

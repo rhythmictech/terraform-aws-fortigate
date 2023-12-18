@@ -2,6 +2,9 @@ config system admin
         edit admin
         set password "${password}"
 end
+config system global
+    set admin-sport ${https_port}
+end
 config system interface
     edit "port1"
         set vdom "root"
