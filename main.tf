@@ -62,7 +62,7 @@ module "keypair" {
 resource "aws_instance" "this" {
   ami                  = local.ami
   ebs_optimized        = true
-  iam_instance_profile = aws_iam_instance_profile.this.name
+  iam_instance_profile = aws_iam_instance_profile.this.id
   instance_type        = var.instance_type
   key_name             = module.keypair.key_name
   source_dest_check    = false
