@@ -51,7 +51,9 @@ module "fortigate_password" {
 }
 
 module "keypair" {
-  source      = "git::https://github.com/rhythmictech/terraform-aws-secretsmanager-keypair?ref=v0.0.3"
+  source  = "rhythmictech/secretsmanager-keypair/aws"
+  version = "0.0.4"
+
   name_prefix = var.name
   description = "${var.name} SSH keypair"
   tags        = var.tags
