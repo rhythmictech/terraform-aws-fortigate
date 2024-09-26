@@ -15,12 +15,12 @@ output "instance_fortigate_primary_network_interface_id" {
 
 output "keypair_key_name" {
   description = "Instance keypair name"
-  value       = module.keypair.key_name
+  value       = try(module.keypair.key_name, null)
 }
 
 output "s3_bucket_config" {
   description = "S3 bucket holding configuration"
-  value       = var.create_config_bucket ? aws_s3_bucket.config[0].bucket : ""
+  value       = try(aws_s3_bucket.config[0].bucket, null)
 }
 
 output "secretsmanager_secret_arn" {

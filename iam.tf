@@ -23,7 +23,7 @@ data "aws_iam_policy_document" "bucket_access" {
   statement {
     actions   = ["s3:GetObject"]
     effect    = "Allow"
-    resources = ["arn:aws:s3:::${var.config_bucket_name}/*"]
+    resources = ["arn:${data.aws_partition.current.partition}:s3:::${var.config_bucket_name}/*"]
   }
 }
 
@@ -42,7 +42,7 @@ resource "aws_iam_role_policy_attachment" "bucket_access" {
 resource "aws_iam_role_policy_attachment" "sdn_access" {
   count      = var.enable_sdn_access ? 1 : 0
   role       = aws_iam_role.this.id
-  policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ReadOnlyAccess"
+  policy_arn = "arn:${data.aws_partition.current.partition}:iam::aws:policy/AmazonEC2ReadOnlyAccess"
 }
 
 resource "aws_iam_instance_profile" "this" {
